@@ -1,0 +1,39 @@
+{
+  "name": "nht/notification",
+  "description": "This Laravel package provides a simple, unified way to send notifications across multiple channels— Email, SMS, and Push Notifications—with minimal setup. Designed for developers who value efficiency and flexibility, it streamlines the process of reaching users wherever they are.",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "notification",
+    "broadcast",
+    "package",
+    "email",
+    "sms",
+    "push notification"
+  ],
+  "authors": [
+    {
+      "name": "Nazmul Hasan",
+      "email": "nazmulhasan169369@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "illuminate/support": "^10.0|^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "NH\\Notification\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "NH\\Notification\\NotificationProvider"
+      ]
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
