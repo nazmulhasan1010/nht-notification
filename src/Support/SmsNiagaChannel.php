@@ -31,26 +31,13 @@ class SmsNiagaChannel
     {
         $notify = (object)$notification->toCustomSms($notifiable);
 
-        $client = new Client([
-            'base_uri' => config('notification.niaga_sms_base_url'),
-            'timeout' => config('notification.sms_niaga_timeout'),
-            'headers' => [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . config('notification.niaga_sms_api_token'),
-                'Content-Type' => 'application/json',
-                'accept' => 'application/json',
-                'content-type' => 'application/json',
-            ],
-        ]);
-
         try {
-            $response = $client->post('/api/send', [
-                'json' => [
-                    'body' => $notify->message,
-                    'phones' => is_array($notify->to) ? $notify->to : [$notify->to],
-                    'sender_id' => config('notification.niaga_sms_sender_id'),
-                ],
+            Http::withHeaders(['Authorization' => 'Bearer ' . config('notification.niaga_sms_api_token')])->timeout(config('notification.sms_niaga_timeout'))->baseUrl(config('notification.niaga_sms_base_url'))->acceptJson()->asJson()->post('/api/send', [
+                'body' => $notify->message,
+                'phones' => (array)$notify->to,
+                'sender_id' => config('notification.niaga_sms_sender_id'),
             ]);
+
             return 'success';
         } catch (RequestException $e) {
             return $e->getMessage();

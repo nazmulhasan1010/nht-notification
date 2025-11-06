@@ -249,13 +249,15 @@ class Notification
     }
 
     /**
+     * @param null $user
      * @return object
      */
-    public static function get(): object
+    public static function get($user = null): object
     {
+        $fiu = $user ?? Auth::user();
         return (object)[
-            'all' => Auth::user()?->notifications->sortByDesc('created_at'),
-            'unread' => Auth::user()?->unreadNotifications->sortByDesc('created_at')
+            'all' => $fiu?->notifications->sortByDesc('created_at'),
+            'unread' => $fiu?->unreadNotifications->sortByDesc('created_at')
         ];
     }
 }
