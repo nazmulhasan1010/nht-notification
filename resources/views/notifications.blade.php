@@ -20,26 +20,27 @@
 <button id="notifToggle" class="notification-btn bg-transparent border-0">
     <i class="bi bi-bell"></i>
     <span @class(['notification-badge', 'd-none' => !$ntUnr])>{{ ($ntUnr ?? 0) > 99 ? '99+' : $ntUnr }}</span>
+    <span>Click Me</span>
 </button>
 
 <div id="notifOverlay" class="n-overlay" style="display:none;"></div>
 
 <aside id="notifDrawer" class="n-drawer" aria-hidden="true">
     <div class="n-header">
-        <div class="n-title"><i class="bi bi-bell"></i> Notifications ({{ $pushNotify?->all->count() }})</div>
+        <div class="n-title"><i class="bi bi-bell"></i> Notifications ({{ $pushNotify?->all?->count() }})</div>
         <div class="n-actions">
             <button data-href="{{ route('nh-notification.read', 'all') }}" class="n-link mark-as-read"
-                    title="Mark all as read" id="markAll" @disabled($pushNotify?->unread->isEmpty())><i
+                    title="Mark all as read" id="markAll" @disabled($pushNotify?->unread?->isEmpty())><i
                         class="bi bi-check2-square"></i></button>
             <button data-href="{{ route('nh-notification.delete', 'all') }}" class="n-link notify-delete text-danger"
-                    title="Clear all" id="deleteAll" @disabled($pushNotify?->all->isEmpty())><i
+                    title="Clear all" id="deleteAll" @disabled($pushNotify?->all?->isEmpty())><i
                         class="bi bi-trash3"></i></button>
             <button id="closeDrawer" class="n-icon" aria-label="Close"><i class="bi bi-x-lg"></i></button>
         </div>
     </div>
     <div id="notifList" class="n-list">
         <div id="notifList" class="n-list">
-            @forelse($pushNotify?->all->take(10) as $notify)
+            @forelse($pushNotify?->all?->take(10) ?? [] as $notify)
                 @php $ndt = (object) $notify->data; $bg = $ndt->type ?? null; @endphp
                 <div @class(['n-item', 'read' => $notify->read_at])>
                     <div @class(['n-dot', "bg-$bg"])></div>
@@ -74,7 +75,7 @@
         </div>
     </div>
     @php
-        $remaining = max(($pushNotify?->all->count() ?? 0) - 10, 0);
+        $remaining = max(($pushNotify?->all?->count() ?? 0) - 10, 0);
     @endphp
     <div class="n-footer">
         <a role="button" id="loadMore" data-href="{{ route('notification.show-more', 1) }}"

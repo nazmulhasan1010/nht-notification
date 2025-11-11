@@ -8,7 +8,7 @@ use NH\Notification\NotificationProvider;
 class Install extends Command
 {
     protected $signature = 'nht-notification:published {--force : Overwrite any existing files}';
-    protected $description = 'Install nh|notification (publish config, views, and broadcast channel)';
+    protected $description = 'Install nh|notification (publish config, views, styles, controllers, routes and broadcast channel)';
 
     public function handle(): int
     {

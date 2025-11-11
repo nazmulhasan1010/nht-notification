@@ -29,14 +29,13 @@ Route::get('temp-notification', function () {
         'mail-template' => [
             'template' => ['registration', 'Subject'],
             'subject' => 'Welcome to ALJ Harmony',
-            'mail_to' => 'email@email.com',
-            'mail_to_users' => $users,
+            'mail_to' => 'tarahasan169369@gmail.com',
             'data' => (object)[
                 'user_name' => 'Anik Da',
                 'role' => 'Agency Admin',
                 'agency_name' => 'ALJ Harmony',
                 'email' => 'example@email.com',
-                'login_on' => route('customer.product'),
+                'login_on' => '[page url]',
             ],
         ]
     ]);
