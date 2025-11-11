@@ -22,6 +22,12 @@ class Install extends Command
 
         $this->callSilent('vendor:publish', [
             '--provider' => NotificationProvider::class,
+            '--tag' => 'nh-styles',
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->callSilent('vendor:publish', [
+            '--provider' => NotificationProvider::class,
             '--tag' => 'nh-config',
             '--force' => $this->option('force'),
         ]);
@@ -32,11 +38,19 @@ class Install extends Command
             '--force' => $this->option('force'),
         ]);
 
+        $this->callSilent('vendor:publish', [
+            '--provider' => NotificationProvider::class,
+            '--tag' => 'nh-controllers',
+            '--force' => $this->option('force'),
+        ]);
 
-        $this->info('MyTool installed!');
-        $this->line('Config: config/notification.php');
-        $this->line('Views: resources/views/emails/');
-        $this->line('Broadcast channel: Broadcasting/SmsChannel.php');
+
+        $this->info('nht-notification installed!');
+        $this->info('Config: config/notification.php');
+        $this->info('Views: resources/views/emails/');
+        $this->info('Styles: public/assets/nht-scss/');
+        $this->info('Broadcast channels: Broadcasting/');
+        $this->info('Controllers: app/Http/Controllers/');
         return self::SUCCESS;
     }
 }
