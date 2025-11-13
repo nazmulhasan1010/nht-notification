@@ -1,30 +1,21 @@
 <?php
+
 use NH\Notification\Notifications\Notification;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('notifications', function () {
-    return view('notifications');
-});
 
-Route::get('temp-notification', function () {
-    $users = Auth::user();
+Route::get('temp-sms-notification', function () {
     Notification::send([
         'sms' => [
             'phone' => '+18777804236',
             'message' => 'A new animal has been registered on your farm. Sms after issue fix',
         ],
     ]);
+});
 
-    Notification::sendPush([
-        'sent_to_users' => $users,
-        'data' => [
-            'booking_id' => 1,
-            'message' => 'Your booking has been confirmed.',
-        ],
-    ]);
-
+Route::get('temp-email-notification', function () {
     Notification::send([
         'mail-template' => [
             'template' => ['registration', 'Subject'],
@@ -41,7 +32,24 @@ Route::get('temp-notification', function () {
     ]);
 });
 
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('nht-notifications', function () {
+        return view('notifications');
+    });
 
-Route::get('nh-notification/{page}', [NotificationController::class, 'get'])->name('notification.show-more');
-Route::get('nh-notification-read/{item}', [NotificationController::class, 'read'])->name('nh-notification.read');
-Route::delete('nh-notification/{id}', [NotificationController::class, 'delete'])->name('nh-notification.delete');
+    Route::get('temp-push-notification', function () {
+        $users = Auth::user();
+
+        Notification::sendPush([
+            'sent_to_users' => $users,
+            'data' => [
+                'booking_id' => 1,
+                'message' => 'Your booking has been confirmed.',
+            ],
+        ]);
+    });
+
+    Route::get('nh-notification/{page}', [NotificationController::class, 'get'])->name('notification.show-more');
+    Route::get('nh-notification-read/{item}', [NotificationController::class, 'read'])->name('nh-notification.read');
+    Route::delete('nh-notification/{id}', [NotificationController::class, 'delete'])->name('nh-notification.delete');
+});
