@@ -5,6 +5,26 @@ $n-sub: #64748b;
 $n-line: #e5e7eb;
 $n-soft: #f8fafc;
 
+.notification-btn {
+  margin-right: 20px;
+  position: relative;
+
+  .bi-bell {
+    font-size: 21px;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    padding: 0 5px;
+    background-color: #C10603;
+    font-size: 10px;
+    border-radius: 10px;
+    color: white;
+    z-index: 1;
+  }
+}
 
 .n-btn {
   background: $accent;
