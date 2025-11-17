@@ -7,9 +7,19 @@ use NH\Notification\NotificationProvider;
 
 class Install extends Command
 {
+    /**
+     * @var string
+     */
     protected $signature = 'nht-notification:published {--force : Overwrite any existing files}';
+
+    /**
+     * @var string
+     */
     protected $description = 'Install nh|notification (publish config, views, styles, controllers, routes and broadcast channel)';
 
+    /**
+     * @return int
+     */
     public function handle(): int
     {
         $this->info('Installing nh|notification...');

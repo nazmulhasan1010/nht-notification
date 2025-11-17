@@ -1,6 +1,6 @@
 # NH Notification Package
 
-**Version:** 1.0.2  
+**Version:** 1.8.2  
 **Author:** [Nazmul Hasan](mailto:nazmulhasan169369@gmail.com)  
 **License:** MIT  
 **Framework:** Laravel 10 / 11  
@@ -204,6 +204,43 @@ Notification::sendPush([
         'message' => 'Your booking has been confirmed.',
     ],
 ]);
+```
+
+## Push Notification Drawer
+
+### 1. Overview
+
+The **Push Notification Drawer** is a slide-in panel that shows all recent notifications for the logged-in user.
+
+- Opens from the **right side** of the screen.
+- Can be toggled from the **notification bell icon** in the top bar.
+- Shows **unread** and **read** notifications, grouped by time.
+- Supports **click actions** (e.g., open related page, mark as read, etc.).
+
+---
+
+### 2. Demo Page URL
+
+You can view the demo page here:
+
+👉 **URL:** https://your-domain.com/nht-notifications  
+(Replace this with your actual domain name)
+
+Example placeholder:
+
+### Header menu bell icon
+![Header menu bell icon](header-menu-bell-icon.png)
+
+### Sidebar notification drawer
+![Sidebar notification drawer](sidebar-drawer.png)
+
+### 2.1 Closed State (Bell Icon with Badge) 
+
+```text
+Top Navigation Bar
+┌─────────────────────────────────────────────────────────┐
+│  Logo         ...                         🔔 (3)       │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---

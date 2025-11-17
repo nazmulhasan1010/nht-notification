@@ -94,6 +94,10 @@ class NotificationController extends Controller
         ]);
     }
 
+    /**
+     * @param $item
+     * @return JsonResponse
+     */
     public function delete($item): JsonResponse
     {
         $user = Auth::user();

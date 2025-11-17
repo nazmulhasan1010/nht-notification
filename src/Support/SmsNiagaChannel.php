@@ -22,7 +22,6 @@ class SmsNiagaChannel
         //
     }
 
-
     /**
      * @throws GuzzleException
      * @throws JsonException

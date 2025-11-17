@@ -15,8 +15,19 @@ class SmsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    /**
+     * @var string
+     */
     public string $message;
+
+    /**
+     * @var string|array
+     */
     public string|array $phone;
+
+    /**
+     * @var string[]
+     */
     private $channels = [
         'twilio' => TwilioChannel::class,
         'smsniagra' => SmsNiagaChannel::class,

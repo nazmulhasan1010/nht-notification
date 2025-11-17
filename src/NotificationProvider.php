@@ -8,11 +8,17 @@ use NH\Notification\Console\Uninstall;
 
 class NotificationProvider extends ServiceProvider
 {
+    /**
+     * @return void
+     */
     public function register(): void
     {
-
+        //
     }
 
+    /**
+     * @return void
+     */
     public function boot(): void
     {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'notification');
