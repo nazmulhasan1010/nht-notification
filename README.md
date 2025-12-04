@@ -291,6 +291,8 @@ To completely remove:
 
 ```bash
 php artisan nht-notification:remove
+// or
+php artisan nht-notification:remove --force
 ```
 and then
 ```bash

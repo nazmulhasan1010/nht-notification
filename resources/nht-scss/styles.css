@@ -132,6 +132,7 @@
   border-radius: 12px;
   background: #f1f5f9;
   margin: 8px 4px;
+  position: relative;
 }
 .n-item.read {
   background: #fff;
@@ -159,12 +160,23 @@
   margin-bottom: 4px;
   display: flex;
 }
+.n-title-line .title-line {
+  width: 25ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .n-title-line p {
   width: 77%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
+}
+.n-title-line .n-meta {
+  position: absolute;
+  top: -2px;
+  right: 10px;
 }
 
 .n-msg {

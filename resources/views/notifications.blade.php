@@ -46,7 +46,7 @@
                     <div @class(['n-dot', "bg-$bg"])></div>
                     <div>
                         <div class="n-title-line d-flex justify-content-between">
-                            <p>{{ $ndt->title }}</p>
+                            <p class="title-line" title="{{ $ndt->title }}">{{ $ndt->title }}</p>
                             <span class="n-meta">
                                 {{ Carbon::parse($notify->created_at)?->diffForHumans(['short' => true, 'parts' => 1]) }}
                             </span>

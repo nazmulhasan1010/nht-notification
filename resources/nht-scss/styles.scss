@@ -146,6 +146,7 @@ $n-soft: #f8fafc;
   border-radius: 12px;
   background: #f1f5f9;
   margin: 8px 4px;
+  position: relative;
 
   &.read {
     background: #fff;
@@ -176,12 +177,25 @@ $n-soft: #f8fafc;
   margin-bottom: 4px;
   display: flex;
 
+  .title-line {
+    width: 25ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   p {
     width: 77%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
+  }
+
+  .n-meta {
+    position: absolute;
+    top: -2px;
+    right: 10px;
   }
 }
 
