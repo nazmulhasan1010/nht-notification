@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as LaraNotify;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 
 class Notification
@@ -20,21 +21,25 @@ class Notification
 
     public function __construct()
     {
-        $viewsPath = resource_path('views/' . config('notification.mail_template_path'));
+        $cacheKey = 'nht_notification_email_templates';
 
-        $templates = [];
-        if (File::exists($viewsPath)) {
-            $files = File::allFiles($viewsPath);
+        $this->views = Cache::rememberForever($cacheKey, function () {
+            $viewsPath = resource_path('views/' . config('notification.mail_template_path'));
 
-            $templates = collect($files)->mapWithKeys(function ($file) {
-                $key = Str::replace(['.blade.php', '-'], ['', '_'], $file->getFilename());
-                $view = Str::of($file->getPathname())->replace(resource_path('views/'), '')->replace(['.blade.php', DIRECTORY_SEPARATOR], ['', '.'])->value();
+            $templates = [];
+            if (File::exists($viewsPath)) {
+                $files = File::allFiles($viewsPath);
 
-                return [$key => $view];
-            })->toArray();
-        }
+                $templates = collect($files)->mapWithKeys(function ($file) {
+                    $key = Str::replace(['.blade.php', '-'], ['', '_'], $file->getFilename());
+                    $view = Str::of($file->getPathname())->replace(resource_path('views/'), '')->replace(['.blade.php', DIRECTORY_SEPARATOR], ['', '.'])->value();
 
-        $this->views = (object)$templates;
+                    return [$key => $view];
+                })->toArray();
+            }
+
+            return (object)$templates;
+        });
     }
 
     /**
