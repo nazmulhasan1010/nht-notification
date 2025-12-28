@@ -21,6 +21,12 @@ class Notification
      */
     protected object $views;
 
+    /**
+     * @var string
+     */
+    protected string $ip;
+
+
     public function __construct()
     {
         $cacheKey = 'nht_notification_email_templates';
@@ -42,6 +48,7 @@ class Notification
 
             return (object)$templates;
         });
+        $this->ip = request()->ip();
     }
 
     /**
@@ -50,7 +57,7 @@ class Notification
      */
     public static function send($notifications): bool
     {
-        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send'), maxAttempts: config('notification.send_limit'), decaySeconds: 60, message: 'Notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send'), maxAttempts: config('notification.send_limit'), decaySeconds: 60, message: 'Notification send limit exceeded.');
 
         $own = new self();
         foreach ($notifications as $channel => $notification) {
@@ -107,7 +114,7 @@ class Notification
      */
     public static function sendPush($notification): bool
     {
-        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-push'), maxAttempts: config('notification.send_push_limit'), decaySeconds: 60, message: 'Push notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-push'), maxAttempts: config('notification.send_push_limit'), decaySeconds: 60, message: 'Push notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;
@@ -124,7 +131,7 @@ class Notification
      */
     public static function sendMail($notification): bool
     {
-        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;
@@ -147,7 +154,7 @@ class Notification
      */
     public static function sendMailWithTemplate($notification): bool
     {
-        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;
@@ -171,7 +178,7 @@ class Notification
      */
     public static function sendSms($notification): bool
     {
-        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-sms'), maxAttempts: config('notification.send_sms_limit'), decaySeconds: 60, message: 'Sms notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-sms'), maxAttempts: config('notification.send_sms_limit'), decaySeconds: 60, message: 'Sms notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;

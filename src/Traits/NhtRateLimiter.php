@@ -29,11 +29,11 @@ trait NhtRateLimiter
 
     /**
      * @param string $prefix
-     * @param int|null $userId
+     * @param string|null $ip
      * @param string|null $method
      * @return string
      */
-    private static function key(string $prefix, ?int $userId, ?string $method): string
+    private static function key(string $prefix, ?string $ip, ?string $method): string
     {
         $scope = [];
 
@@ -41,8 +41,8 @@ trait NhtRateLimiter
             $scope[] = "method:{$method}";
         }
 
-        if ($userId) {
-            $scope[] = "user:{$userId}";
+        if ($ip) {
+            $scope[] = "ip:{$ip}";
         }
 
         if (empty($scope)) {
