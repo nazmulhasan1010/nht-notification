@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as LaraNotify;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
-
+use NH\Notification\Traits\NhtRateLimiter;
 
 class Notification
 {
+    use NhtRateLimiter;
+
     /**
      * @var object
      */
@@ -44,10 +46,12 @@ class Notification
 
     /**
      * @param $notifications
-     * @return int
+     * @return true
      */
-    public static function send($notifications): int
+    public static function send($notifications): bool
     {
+        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send'), maxAttempts: config('notification.send_limit'), decaySeconds: 60, message: 'Notification send limit exceeded.');
+
         $own = new self();
         foreach ($notifications as $channel => $notification) {
             $notify = (object)$notification;
@@ -99,10 +103,12 @@ class Notification
 
     /**
      * @param $notification
-     * @return int
+     * @return bool
      */
-    public static function sendPush($notification): int
+    public static function sendPush($notification): bool
     {
+        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-push'), maxAttempts: config('notification.send_push_limit'), decaySeconds: 60, message: 'Push notification send limit exceeded.');
+
         $own = new self();
         $notify = (object)$notification;
 
@@ -114,10 +120,12 @@ class Notification
 
     /**
      * @param $notification
-     * @return int
+     * @return bool
      */
-    public static function sendMail($notification): int
+    public static function sendMail($notification): bool
     {
+        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
+
         $own = new self();
         $notify = (object)$notification;
 
@@ -135,10 +143,12 @@ class Notification
 
     /**
      * @param $notification
-     * @return true|int
+     * @return bool
      */
-    public static function sendMailWithTemplate($notification): true|int
+    public static function sendMailWithTemplate($notification): bool
     {
+        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
+
         $own = new self();
         $notify = (object)$notification;
 
@@ -157,10 +167,12 @@ class Notification
 
     /**
      * @param $notification
-     * @return int
+     * @return bool
      */
-    public static function sendSms($notification): int
+    public static function sendSms($notification): bool
     {
+        self::throttle(key: self::key('notification.send', Auth::user()->id, 'send-sms'), maxAttempts: config('notification.send_sms_limit'), decaySeconds: 60, message: 'Sms notification send limit exceeded.');
+
         $own = new self();
         $notify = (object)$notification;
 
@@ -180,10 +192,10 @@ class Notification
     /**
      * @param $pref
      * @param $data
-     * @param null $ds
-     * @return \Notifications\EmailNotification
+     * @param $ds
+     * @return \NH\Notification\Notifications\EmailNotification
      */
-    protected function template($pref, $data, $ds = null): EmailNotification
+    protected function template($pref, $data, $ds = null): \NH\Notification\Notifications\EmailNotification
     {
         $lc = config('notification.mail_subject_localize');
         $vn = Str::of($pref[0])->replace(['-', '.', '/', ' '], '_');
@@ -194,9 +206,9 @@ class Notification
     /**
      * @param $notify
      * @param $template
-     * @return void
+     * @return true
      */
-    protected function mailTo($notify, $template): void
+    protected function mailTo($notify, $template): bool
     {
         if (is_array($notify->mail_to)) {
             foreach ($notify->mail_to as $ml) {
@@ -205,6 +217,7 @@ class Notification
         } else {
             LaraNotify::route('mail', $notify->mail_to)->notify($template);
         }
+        return true;
     }
 
     /**

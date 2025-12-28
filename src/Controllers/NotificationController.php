@@ -74,6 +74,19 @@ class NotificationController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function notifications(): JsonResponse
+    {
+        return response()->json([
+            'result' => 1,
+            'response' => 'Notifications list.',
+            'notifications' =>  Notification::get(),
+        ]);
+    }
+
+
+    /**
      * @param $item
      * @return JsonResponse
      */
@@ -89,6 +102,7 @@ class NotificationController extends Controller
         Notification::get()->unread->where('id', $item)?->markAsRead();
 
         return response()->json([
+            'result' => 1,
             'response' => $response,
             'unread' => Auth::user()->unreadNotifications()->count(),
         ]);
@@ -109,6 +123,7 @@ class NotificationController extends Controller
         $user->notifications()->where('id', $item)?->delete();
 
         return response()->json([
+            'result' => 1,
             'response' => $response,
             'unread' => Auth::user()->unreadNotifications()->count(),
         ]);

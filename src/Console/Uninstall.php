@@ -48,7 +48,7 @@ class Uninstall extends Command
         $this->callSilent('cache:clear');
 
         $this->newLine();
-        $this->info('✅ nh|Notification successfully uninstalled!');
+        $this->info('✅ nh|notification successfully uninstalled!');
         $this->line('All related config, templates, and channels have been removed.');
 
         return self::SUCCESS;
