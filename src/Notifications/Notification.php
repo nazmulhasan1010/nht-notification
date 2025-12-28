@@ -57,7 +57,7 @@ class Notification
      */
     public static function send($notifications): bool
     {
-        self::throttle(key: self::key('notification.send', (new self)->ip, 'send'), maxAttempts: config('notification.send_limit'), decaySeconds: 60, message: 'Notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send'), maxAttempts: config('notification.send_limit', 500), decaySeconds: 60, message: 'Notification send limit exceeded.');
 
         $own = new self();
         foreach ($notifications as $channel => $notification) {
@@ -114,7 +114,7 @@ class Notification
      */
     public static function sendPush($notification): bool
     {
-        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-push'), maxAttempts: config('notification.send_push_limit'), decaySeconds: 60, message: 'Push notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-push'), maxAttempts: config('notification.send_push_limit', 200), decaySeconds: 60, message: 'Push notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;
@@ -131,7 +131,7 @@ class Notification
      */
     public static function sendMail($notification): bool
     {
-        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-email'), maxAttempts: config('notification.send_email_limit', 200), decaySeconds: 60, message: 'Email notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;
@@ -154,7 +154,7 @@ class Notification
      */
     public static function sendMailWithTemplate($notification): bool
     {
-        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-email'), maxAttempts: config('notification.send_email_limit'), decaySeconds: 60, message: 'Email notification send limit exceeded.');
+        self::throttle(key: self::key('notification.send', (new self)->ip, 'send-email'), maxAttempts: config('notification.send_email_limit', 100), decaySeconds: 60, message: 'Email notification send limit exceeded.');
 
         $own = new self();
         $notify = (object)$notification;
