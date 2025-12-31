@@ -85,7 +85,6 @@ class NotificationController extends Controller
         ]);
     }
 
-
     /**
      * @param $item
      * @return JsonResponse

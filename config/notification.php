@@ -12,4 +12,5 @@ return [
     'send_push_limit' => 200,
     'send_email_limit' => 200,
     'send_sms_limit' => 100,
+    'api_prefix' => '/v1',
 ];
