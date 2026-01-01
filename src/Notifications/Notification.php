@@ -6,15 +6,15 @@ use NH\Notification\Notifications\EmailNotification;
 use NH\Notification\Notifications\PushNotification;
 use NH\Notification\Notifications\SmsNotification;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as LaraNotify;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use NH\Notification\Traits\LoadTemplate;
 use NH\Notification\Traits\NhtRateLimiter;
 
 class Notification
 {
-    use NhtRateLimiter;
+    use NhtRateLimiter, LoadTemplate;
 
     /**
      * @var object
@@ -31,23 +31,14 @@ class Notification
     {
         $cacheKey = 'nht_notification_email_templates';
 
-        $this->views = Cache::rememberForever($cacheKey, function () {
-            $viewsPath = resource_path('views/' . config('notification.mail_template_path'));
+        if (app()->environment('production')) {
+            $this->views = Cache::rememberForever($cacheKey, function () {
+                return $this->loadTemplates();
+            });
+        } else {
+            $this->views = self::loadTemplates();
+        }
 
-            $templates = [];
-            if (File::exists($viewsPath)) {
-                $files = File::allFiles($viewsPath);
-
-                $templates = collect($files)->mapWithKeys(function ($file) {
-                    $key = Str::replace(['.blade.php', '-'], ['', '_'], $file->getFilename());
-                    $view = Str::of($file->getPathname())->replace(resource_path('views/'), '')->replace(['.blade.php', DIRECTORY_SEPARATOR], ['', '.'])->value();
-
-                    return [$key => $view];
-                })->toArray();
-            }
-
-            return (object)$templates;
-        });
         $this->ip = request()->ip();
     }
 
