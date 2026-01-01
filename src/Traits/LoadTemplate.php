@@ -3,6 +3,7 @@
 namespace NH\Notification\Traits;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 trait LoadTemplate
 {
