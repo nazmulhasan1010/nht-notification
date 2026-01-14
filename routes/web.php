@@ -15,14 +15,14 @@ Route::get('temp-sms-notification', function () {
     ]);
 });
 
-Route::get('temp-email-notification/{count?}', function ($count = 1) {
+Route::get('temp-email-notification/{email}/{count?}', function ($email, $count = 1) {
     $count = max(1, min((int)$count, 100));
     for ($i = 0; $i < $count; $i++) {
         Notification::send([
             'mail-template' => [
                 'template' => ['registration', 'Subject'],
-                'subject' => 'Welcome to ALJ Harmony',
-                'mail_to' => 'tarahasan169369@gmail.com',
+                'subject' => 'Welcome NHT Notification',
+                'mail_to' => $email,
                 'data' => (object)[
                     'user_name' => 'User Name',
                     'role' => 'Agency Admin',
