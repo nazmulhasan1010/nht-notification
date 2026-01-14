@@ -81,7 +81,27 @@ class NotificationController extends Controller
         return response()->json([
             'result' => 1,
             'response' => 'Notifications list.',
-            'notifications' =>  Notification::get(),
+            'notifications' => Notification::get(),
+        ]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function statistics(): JsonResponse
+    {
+        $user = Auth::user();
+        return response()->json([
+            'result' => 1,
+            'response' => 'Notifications statistics.',
+            'data' => [
+                'total_notifications' => $user->notifications()->count(),
+                'unread_notifications' => $user->unreadNotifications()->count(),
+                'read_notifications' => $user->readNotifications()->count(),
+                'notifications_today' => $user->notifications()->whereDate('created_at', today())->count(),
+                'notifications_this_week' => $user->notifications()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+                'notifications_this_month' => $user->notifications()->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            ],
         ]);
     }
 
