@@ -21,7 +21,7 @@ class NotificationProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'notification');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'nht-notification');
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
 

@@ -15,21 +15,29 @@ Route::get('temp-sms-notification', function () {
     ]);
 });
 
-Route::get('temp-email-notification', function () {
-    Notification::send([
-        'mail-template' => [
-            'template' => ['registration', 'Subject'],
-            'subject' => 'Welcome to ALJ Harmony',
-            'mail_to' => 'tarahasan169369@gmail.com',
-            'data' => (object)[
-                'user_name' => 'Anik Da',
-                'role' => 'Agency Admin',
-                'agency_name' => 'ALJ Harmony',
-                'email' => 'example@email.com',
-                'login_on' => '[page url]',
-            ],
-        ]
-    ]);
+Route::get('temp-email-notification/{count?}', function ($count = 1) {
+    $count = max(1, min((int)$count, 100));
+    for ($i = 0; $i < $count; $i++) {
+        Notification::send([
+            'mail-template' => [
+                'template' => ['registration', 'Subject'],
+                'subject' => 'Welcome to ALJ Harmony',
+                'mail_to' => 'tarahasan169369@gmail.com',
+                'data' => (object)[
+                    'user_name' => 'User Name',
+                    'role' => 'Agency Admin',
+                    'agency_name' => 'Agency name',
+                    'email' => 'example@email.com',
+                    'login_on' => '[page url]',
+                ],
+            ]
+        ]);
+    }
+
+    return response()->view('nht-notification::temp', ['data' => (object)[
+        'type' => 'Email',
+        'count' => $count
+    ]], 200);
 });
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -37,16 +45,24 @@ Route::middleware(['web', 'auth'])->group(function () {
         return view('notifications');
     });
 
-    Route::get('temp-push-notification', function () {
+    Route::get('temp-push-notification/{count?}', function ($count = 1) {
         $users = Auth::user();
-
-        Notification::sendPush([
-            'sent_to_users' => $users,
-            'data' => [
-                'booking_id' => 1,
-                'message' => 'Your booking has been confirmed.',
-            ],
-        ]);
+        $count = max(1, min((int)$count, 100));
+        for ($i = 0; $i < $count; $i++) {
+            Notification::sendPush([
+                'sent_to_users' => $users,
+                'data' => [
+                    'type' => 'info',
+                    'title' => 'Notification title here',
+                    'message' => 'Notification long message here...',
+                    'link' => 'any link',
+                ]
+            ]);
+        }
+        return response()->view('nht-notification::temp', ['data' => (object)[
+            'type' => 'Push',
+            'count' => $count
+        ]], 200);
     });
 
     Route::get('nh-notification/{page}', [NotificationController::class, 'get'])->name('notification.show-more');

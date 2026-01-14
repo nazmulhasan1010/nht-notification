@@ -15,7 +15,7 @@ class Uninstall extends Command
     /**
      * @var string
      */
-    protected $description = 'Uninstall nh|notification (remove config, views, styles, controllers, routes and broadcast channel)';
+    protected $description = 'Uninstall nht|notification (remove config, views, styles, controllers, routes and broadcast channel)';
 
     /**
      * @return int
@@ -35,7 +35,7 @@ class Uninstall extends Command
 
         foreach ($paths as $path) {
             if ($fs->exists($path)) {
-                if ($this->option('force') || $this->confirm("Delete {$path}?", true)) {
+                if ($this->option('force')) {
                     $fs->delete($path);
                     $fs->deleteDirectory($path);
                     $this->line("Removed: {$path}");
@@ -48,7 +48,7 @@ class Uninstall extends Command
         $this->callSilent('cache:clear');
 
         $this->newLine();
-        $this->info('✅ nh|notification successfully uninstalled!');
+        $this->info('✅ nht|notification successfully uninstalled!');
         $this->line('All related config, templates, and channels have been removed.');
 
         return self::SUCCESS;
