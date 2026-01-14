@@ -1,6 +1,6 @@
 # NH Notification Package
 
-**Version:** 2.1.0  
+**Version:** 2.2.0  
 **Author:** [Nazmul Hasan](mailto:nazmulhasan169369@gmail.com)  
 **License:** MIT  
 **Framework:** Laravel 10 / 11  
