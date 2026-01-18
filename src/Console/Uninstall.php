@@ -35,7 +35,7 @@ class Uninstall extends Command
 
         foreach ($paths as $path) {
             if ($fs->exists($path)) {
-                if ($this->option('force')) {
+                if ($this->option('force') || $this->confirm("Delete {$path}?", true)) {
                     $fs->delete($path);
                     $fs->deleteDirectory($path);
                     $this->line("Removed: {$path}");
