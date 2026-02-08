@@ -74,14 +74,27 @@ class NotificationController extends Controller
     }
 
     /**
+     * @param null $date
      * @return JsonResponse
      */
-    public function notifications(): JsonResponse
+    public function notifications($date = null): JsonResponse
     {
+        $notifications = null;
+        if ($date) {
+            $date = Carbon::parse($date)->toDateString();
+            $notifications = (object)[
+                'all' => Notification::get()->all->filter(function ($notification) use ($date) {
+                    return $notification->created_at->isSameDay($date);
+                })->values(),
+                'unread' => Notification::get()->unread->filter(function ($notification) use ($date) {
+                    return $notification->created_at->isSameDay($date);
+                })->values()
+            ];
+        }
         return response()->json([
             'result' => 1,
             'response' => 'Notifications list.',
-            'notifications' => Notification::get(),
+            'notifications' => $notifications ?? Notification::get(),
         ]);
     }
 
