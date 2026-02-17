@@ -110,8 +110,8 @@
 <script>
     $(function ($) {
         $(document).on('click', '.notify-load-more', function () {
-            let url = $(this).data('href');
-            let thisEl = $(this);
+            const thisEl = $(this);
+            const url = thisEl.data('href');
             axios.get(url).then(response => {
                 const data = response.data;
                 const notifyBox = $('#notifList');
@@ -119,7 +119,9 @@
                     $(notifyBox).append(data.html).animate({
                         scrollTop: $(notifyBox)[0].scrollHeight
                     }, 400);
-                    $(thisEl).attr('data-href', data.next).attr('disabled', data.rem === 0);
+
+                    thisEl.data('href', data.next).attr('data-href', data.next);
+                    $(thisEl).attr('disabled', data.rem === 0 ?? 'false');
                 }
             })
         })

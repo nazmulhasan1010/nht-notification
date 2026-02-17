@@ -108,12 +108,12 @@ class NotificationController extends Controller
             'result' => 1,
             'response' => 'Notifications statistics.',
             'data' => [
-                'total_notifications' => $user->notifications()->count(),
-                'unread_notifications' => $user->unreadNotifications()->count(),
-                'read_notifications' => $user->readNotifications()->count(),
-                'notifications_today' => $user->notifications()->whereDate('created_at', today())->count(),
-                'notifications_this_week' => $user->notifications()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
-                'notifications_this_month' => $user->notifications()->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+                'total_notifications' => $user?->notifications()->count(),
+                'unread_notifications' => $user?->unreadNotifications()->count(),
+                'read_notifications' => $user?->readNotifications()->count(),
+                'notifications_today' => $user?->notifications()->whereDate('created_at', today())->count(),
+                'notifications_this_week' => $user?->notifications()->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+                'notifications_this_month' => $user?->notifications()->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
             ],
         ]);
     }
@@ -136,7 +136,7 @@ class NotificationController extends Controller
         return response()->json([
             'result' => 1,
             'response' => $response,
-            'unread' => Auth::user()->unreadNotifications()->count(),
+            'unread' => Auth::user()?->unreadNotifications()->count(),
         ]);
     }
 
@@ -149,15 +149,15 @@ class NotificationController extends Controller
         $user = Auth::user();
         $response = 1;
         if ($item === 'all') {
-            $user->notifications()->take(10)->delete();
+            $user?->notifications()->take(10)->delete();
             $response = 'all';
         }
-        $user->notifications()->where('id', $item)?->delete();
+        $user?->notifications()->where('id', $item)?->delete();
 
         return response()->json([
             'result' => 1,
             'response' => $response,
-            'unread' => Auth::user()->unreadNotifications()->count(),
+            'unread' => $user?->unreadNotifications()->count(),
         ]);
     }
 }
