@@ -43,6 +43,14 @@ class Notification
     }
 
     /**
+     * @return mixed|object
+     */
+    public static function seeViews(): mixed
+    {
+        return (new self())->views;
+    }
+
+    /**
      * @param $notifications
      * @return true
      */
