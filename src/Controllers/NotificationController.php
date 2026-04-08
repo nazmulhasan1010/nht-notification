@@ -15,8 +15,10 @@ class NotificationController extends Controller
      */
     public function get($page): JsonResponse
     {
+        $guard = request('guard');
+        $user = $guard ? Auth::guard($guard)->user() : Auth::user();
         $skip = $page * 10;
-        $notifications = Notification::get()->all->skip($skip)->take(10);
+        $notifications = Notification::get($user)->all->skip($skip)->take(10);
         $messages = null;
 
         foreach ($notifications as $notify) {
@@ -69,7 +71,7 @@ class NotificationController extends Controller
             'status' => 'success',
             'html' => $messages,
             'next' => route('notification.show-more', ($page + 1)),
-            'rem' => Notification::get()->all->skip($skip + 10)->count(),
+            'rem' => Notification::get($user)->all->skip($skip + 10)->count(),
         ]);
     }
 
@@ -79,14 +81,16 @@ class NotificationController extends Controller
      */
     public function notifications($date = null): JsonResponse
     {
+        $guard = request('guard');
+        $user = $guard ? Auth::guard($guard)->user() : Auth::user();
         $notifications = null;
         if ($date) {
             $date = Carbon::parse($date)->toDateString();
             $notifications = (object)[
-                'all' => Notification::get()->all->filter(function ($notification) use ($date) {
+                'all' => Notification::get($user)->all->filter(function ($notification) use ($date) {
                     return $notification->created_at->isSameDay($date);
                 })->values(),
-                'unread' => Notification::get()->unread->filter(function ($notification) use ($date) {
+                'unread' => Notification::get($user)->unread->filter(function ($notification) use ($date) {
                     return $notification->created_at->isSameDay($date);
                 })->values()
             ];
@@ -94,7 +98,7 @@ class NotificationController extends Controller
         return response()->json([
             'result' => 1,
             'response' => 'Notifications list.',
-            'notifications' => $notifications ?? Notification::get(),
+            'notifications' => $notifications ?? Notification::get($user),
         ]);
     }
 
@@ -103,7 +107,8 @@ class NotificationController extends Controller
      */
     public function statistics(): JsonResponse
     {
-        $user = Auth::user();
+        $guard = request('guard');
+        $user = $guard ? Auth::guard($guard)->user() : Auth::user();
         return response()->json([
             'result' => 1,
             'response' => 'Notifications statistics.',
@@ -120,39 +125,44 @@ class NotificationController extends Controller
 
     /**
      * @param $item
+     * @param null $guard
      * @return JsonResponse
      */
-    public function read($item): JsonResponse
+    public function read($item, $guard = null): JsonResponse
     {
+        $guard = $guard ?? request('guard');
+        $user = $guard ? Auth::guard($guard)->user() : Auth::user();
         $response = 1;
         if ($item === 'all') {
-            foreach (Notification::get()->unread as $unread) {
+            foreach (Notification::get($user)->unread as $unread) {
                 $unread->markAsRead();
             }
             $response = 'all';
         }
-        Notification::get()->unread->where('id', $item)?->markAsRead();
+        Notification::get($user)->unread->where('id', $item)?->markAsRead();
 
         return response()->json([
             'result' => 1,
             'response' => $response,
-            'unread' => Auth::user()?->unreadNotifications()->count(),
+            'unread' => $user?->unreadNotifications()->count(),
         ]);
     }
 
     /**
-     * @param $item
+     * @param $id
+     * @param null $guard
      * @return JsonResponse
      */
-    public function delete($item): JsonResponse
+    public function delete($id, $guard = null): JsonResponse
     {
-        $user = Auth::user();
+        $guard = $guard ?? request('guard');
+        $user = $guard ? Auth::guard($guard)->user() : Auth::user();
         $response = 1;
-        if ($item === 'all') {
+        if ($id === 'all') {
             $user?->notifications()->take(10)->delete();
             $response = 'all';
         }
-        $user?->notifications()->where('id', $item)?->delete();
+        $user?->notifications()->where('id', $id)?->delete();
 
         return response()->json([
             'result' => 1,
