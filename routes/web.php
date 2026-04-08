@@ -6,15 +6,16 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::middleware(['web', 'auth'])->group(function () {
-    Route::get('nht-notifications', function () {
+    Route::get('nht-notifications', static function () {
         return view('notifications');
     });
 
-    Route::get('temp-sms-notification/{phone}/{count?}', function ($phone, $count = 1) {
+    Route::get('temp-sms-notification/{phone}/{count?}/{message?}', static function ($phone, $count = 1, $message = null) {
+        $message = $message ?? 'This is a test SMS from NHT Notification.';
         Notification::send([
             'sms' => [
                 'phone' => $phone,
-                'message' => 'This is a test SMS from NHT Notification.',
+                'message' => $message,
             ],
         ]);
 
@@ -25,7 +26,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     });
 
     Route::get('temp-email-notification/{email}/{count?}', function ($email, $count = 1) {
-        $count = max(1, min((int) $count, 10));
+        $count = max(1, min((int)$count, 10));
         for ($i = 0; $i < $count; $i++) {
             Notification::send([
                 'mail-template' => [
