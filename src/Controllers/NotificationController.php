@@ -70,7 +70,7 @@ class NotificationController extends Controller
         return response()->json([
             'status' => 'success',
             'html' => $messages,
-            'next' => route('notification.show-more', ($page + 1)),
+            'next' => route('notification.show-more', ['page' => ($page + 1), 'guard' => $guard]),
             'rem' => Notification::get($user)->all->skip($skip + 10)->count(),
         ]);
     }
